@@ -1,0 +1,135 @@
+# -*- coding: UTF8 -*-
+import requests
+import datetime
+import json
+from ibm_watson import AssistantV1
+from ibm_watson import AssistantV2
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+
+def normalize(s):
+    replacements = (
+        ("á", "a"),
+        ("é", "e"),
+        ("í", "i"),
+        ("ó", "o"),
+        ("ú", "u"),
+        ("\n", ""),
+        ('\"', ""),
+    )
+    for a, b in replacements:
+        s = s.replace(a, b).replace(a.upper(), b.upper())
+    return s
+
+class BotHandler:
+    def __init__(self, token):
+            self.token = token
+            self.api_url = "https://api.telegram.org/bot{}/".format(token)
+
+    #url = "https://api.telegram.org/bot<token>/"
+
+    def get_updates(self, offset=0, timeout=30):
+        method = 'getUpdates'
+        params = {'timeout': timeout, 'offset': offset}
+        resp = requests.get(self.api_url + method, params)
+        result_json = resp.json()['result']
+        return result_json
+
+    def send_message(self, chat_id, text):
+        params = {'chat_id': chat_id, 'text': text, 'parse_mode': 'HTML'}
+        method = 'sendMessage'
+        resp = requests.post(self.api_url + method, params)
+        return resp
+
+    def get_first_update(self):
+        get_result = self.get_updates()
+
+        if len(get_result) > 0:
+            last_update = get_result[0]
+        else:
+            last_update = None
+
+        return last_update
+
+
+token = '1680332449:AAGzfEsLEGjTfbHcI-tALelZ4OUwKNgG1zs' #Token of your bot
+magnito_bot = BotHandler(token) #Your bot's name
+
+
+def main():
+    new_offset = 228565091
+    print('hi, now launching...')
+    authenticator = IAMAuthenticator('ITvi-zv-b3OBJ-4CWFOVM7954tQA48IZlB10k3MDhrtF')
+    assistant = AssistantV2(
+        version='2020-04-01',
+        authenticator = authenticator
+    )
+
+    assistant.set_service_url('https://api.eu-gb.assistant.watson.cloud.ibm.com/instances/051b267d-12bb-4cc6-9282-ff649966c3f8')
+
+    responseCreate = assistant.create_session(
+        assistant_id='e62c449c-c2a0-4c9d-a5c7-573f5a907c0c'
+    ).get_result()
+
+    
+    while True:
+        #try: 
+            all_updates=magnito_bot.get_updates(new_offset)
+
+            if len(all_updates) > 0:
+                for current_update in all_updates:
+                    print(current_update)
+                    first_update_id = current_update['update_id']
+                    if 'text' not in current_update['message']:
+                        first_chat_text='New member'
+                    else:
+                        first_chat_text = current_update['message']['text']
+                        first_chat_id = current_update['message']['chat']['id']
+                    if 'first_name' in current_update['message']:
+                        first_chat_name = current_update['message']['chat']['first_name']
+                    elif 'new_chat_member' in current_update['message']:
+                        first_chat_name = current_update['message']['new_chat_member']['username']
+                    elif 'from' in current_update['message']:
+                        first_chat_name = current_update['message']['from']['first_name']
+                    else:
+                        first_chat_name = "unknown"
+
+                        
+                    if first_chat_text != '/start':  # do nothing
+                        response = assistant.message(
+                            assistant_id='e62c449c-c2a0-4c9d-a5c7-573f5a907c0c',
+                            session_id=responseCreate['session_id'],
+                            input={
+                            'message_type': 'text',
+                            'text': normalize(first_chat_text),
+                            }
+                        ).get_result()
+                    
+                        #print(json.dumps(response, indent=2))
+                        print(json.dumps(response, indent = 2))
+
+                        magnito_bot.send_message(first_chat_id, json.dumps(normalize(response['output']['generic'][0]['text']), indent=2))
+                        new_offset = first_update_id + 1
+                        
+                    else:
+                        magnito_bot.send_message(first_chat_id, 'Buenos días ' + first_chat_name + ', de aquí en adelante le resolveré todas las dudas que le surjan con respecto al inventario de la tienda, su horario y localización. Puede subscribirse escribiendo subscripción para recibir las nuevas remesas de productos que lleguen.')
+                        new_offset = first_update_id + 1
+
+                        
+
+                        '''
+                        responseLista = assistant.list_intents(
+                            workspace_id='1a37b021-5a0a-479d-a7e5-b2adfab8b256'
+                        ).get_result()
+                        '''
+       # except:
+            #print("Ha habido un error")
+
+               
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        exit()
+
