@@ -139,11 +139,12 @@ def main():
                         print(json.dumps(response, indent = 2))
 
                         intent = response['output']['intents'][0]['intent']
+                        id_usuario = current_update['message']['chat']['id']
 
                         if intent == 'Subscripcion':
-                            InsertInDB(response['user_id'])    
+                            InsertInDB(id_usuario)    
                         elif intent == 'Desubscripcion':
-                            DeleteDB(response['user_id']) 
+                            DeleteDB(id_usuario) 
 
                         magnito_bot.send_message(first_chat_id, json.dumps(normalize(response['output']['generic'][0]['text']), indent=2))
                         new_offset = first_update_id + 1
@@ -155,8 +156,10 @@ def main():
                         
 
                         
-        except:
-            print("Ha habido un error")
+        except Exception as e:
+            print(e)
+            magnito_bot.send_message(first_chat_id, 'Lo siento no le entendí, expreselo de otra manera por favor')
+            new_offset = first_update_id + 1
 
                
 
