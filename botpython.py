@@ -15,6 +15,7 @@ mydb = client["BobiDB"]
 
 
 
+
 def isInDB(nombre):
     mycol = mydb["Usuario"]
     query = {"nombre": nombre}
