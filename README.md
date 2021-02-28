@@ -1,5 +1,4 @@
 <!-- PROJECT LOGO -->
-<br />
 <h2>Equipo: TrioFundador</h2>
 <br />
 <p align="center">
