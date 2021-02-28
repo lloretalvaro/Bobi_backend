@@ -73,6 +73,10 @@ El proyecto se ha basado sobretodo en el  uso de microservicios proporcionados p
 
 ### Demo
 
+<a href="https://www.youtube.com/watch?v=8AGManfB4po&feature=youtu.be">
+<img src="docs/img/demoIBM_Moment.png" height="450px">
+</a>
+
 
 
 <!-- GETTING STARTED -->
