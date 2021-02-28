@@ -110,11 +110,11 @@ def main():
                 for current_update in all_updates:
                     print(current_update)
                     first_update_id = current_update['update_id']
+                    first_chat_id = current_update['message']['chat']['id']
                     if 'text' not in current_update['message']:
                         first_chat_text='New member'
                     else:
                         first_chat_text = current_update['message']['text']
-                        first_chat_id = current_update['message']['chat']['id']
                     if 'first_name' in current_update['message']:
                         first_chat_name = current_update['message']['chat']['first_name']
                     elif 'new_chat_member' in current_update['message']:
@@ -145,7 +145,8 @@ def main():
                             InsertInDB(id_usuario)    
                         elif intent == 'Desubscripcion':
                             DeleteDB(id_usuario) 
-
+                        
+                        
                         magnito_bot.send_message(first_chat_id, json.dumps(normalize(response['output']['generic'][0]['text']), indent=2))
                         new_offset = first_update_id + 1
                         
