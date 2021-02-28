@@ -1,8 +1,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="docs/img/bobiReadmeLogo.png" alt="Aprende Ayudando" height="180" >
+  <a href="https://github.com/lloretalvaro/Bobi_backend/">
+    <img src="docs/img/bobiReadmeLogo.png" alt="Bobi" height="180" >
   </a>
 
   <p align="center">
@@ -60,9 +60,10 @@ Ofrecemos una herramienta que permite a los clientes hacer consultas sobre el ne
 
 ### Tecnologías utilizadas
 
-El proyecto se ha desarrollado con herramientas y lenguaje de libre uso. Las tecnologías utilizadas han sido:
-* [Python](https://www.python.org/)
-...
+El proyecto se ha basado sobretodo en el  uso de microservicios proporcionados por el Cloud IBM. A continuación se muestra un diagrama de arquitectura de nuestra aplicación.
+
+<img src="docs/img/bobiArchitecture.png" height="450px">
+
 
 ### Demo
 
