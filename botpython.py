@@ -126,7 +126,7 @@ def main():
                         first_chat_name = "unknown"
 
                         
-                    if first_chat_text != '/start':  # do nothing
+                    if first_chat_text != '/start':  # Este fragmento de código envía la petición del cliente a Watson assitant y recibe la respuesta que le da Watson
                         response = assistant.message(
                             assistant_id=config('ASSISTANT_ID'),
                             session_id=responseCreate['session_id'],
@@ -138,7 +138,8 @@ def main():
                         ).get_result()
                     
                         print(json.dumps(response, indent = 2))
-
+                        
+                        # Esta línea de código obtiene el intent de la pregunta para actuar de acuerdo a él
                         intent = response['output']['intents'][0]['intent']
                         id_usuario = current_update['message']['chat']['id']
 
@@ -147,11 +148,11 @@ def main():
                         elif intent == 'Desubscripcion':
                             DeleteDB(id_usuario) 
                         
-                        
+                        # Esta función muestra la respuesta de Watson assistant en el chat del cliente
                         magnito_bot.send_message(first_chat_id, json.dumps(normalize(response['output']['generic'][0]['text']), indent=2))
                         new_offset = first_update_id + 1
                         
-                    else:
+                    else: 
                         magnito_bot.send_message(first_chat_id, 'Buenos días ' + first_chat_name + ', de aquí en adelante le resolveré todas las dudas que le surjan con respecto al inventario de la tienda, su horario y localización. Puede subscribirse escribiendo subscripción para recibir las nuevas remesas de productos que lleguen.')
                         new_offset = first_update_id + 1
 
