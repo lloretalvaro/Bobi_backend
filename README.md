@@ -4,6 +4,11 @@
   <a href="https://github.com/lloretalvaro/Bobi_backend/">
     <img src="docs/img/bobiReadmeLogo.png" alt="Bobi" height="180" >
   </a>
+  
+  <h4>
+<p align="center">
+    Repositorio dedicado a la parte del backend del proyecto Bobi del equipo TrioFundador.
+  </h4>
 
   <p align="center">
     Bobi es un asistente inteligente para el pequeño negocio.
